@@ -14,29 +14,39 @@
     </properties>
 
     <dependencies>
-        <!-- Cucumber Core -->
+        <!-- ✅ Cucumber 7.11.1 (compatible with Allure) -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
-            <version>7.16.1</version>
+            <version>7.11.1</version>
         </dependency>
-
-        <!-- Cucumber JUnit -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit</artifactId>
-            <version>7.16.1</version>
+            <version>7.11.1</version>
             <scope>test</scope>
         </dependency>
 
-        <!-- Selenium WebDriver -->
+        <!-- ✅ Allure Adapter for Cucumber 7 -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber7-jvm</artifactId>
+            <version>2.24.0</version>
+        </dependency>
+
+        <!-- ✅ Selenium -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.21.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-support</artifactId>
+            <version>4.21.0</version>
+        </dependency>
 
-        <!-- JUnit -->
+        <!-- ✅ JUnit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -44,44 +54,48 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.11.0</version>
-        </dependency>
-
+        <!-- ✅ JSON, Logging -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20240303</version>
         </dependency>
-
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
-
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-support</artifactId>
-            <version>4.20.0</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
         </dependency>
-
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
-
     </dependencies>
 
     <build>
         <plugins>
+            <!-- ✅ Surefire to run tests and enable Allure plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <cucumber.plugin>io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm</cucumber.plugin>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+
+            <!-- ✅ Allure Report Plugin -->
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.11.2</version>
             </plugin>
         </plugins>
     </build>
