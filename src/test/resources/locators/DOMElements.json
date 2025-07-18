@@ -1,0 +1,7 @@
+{
+  "DLP-Login-Link": { "type": "partialLinkText", "value": "Signup" },
+  "DLP-Email-Field": { "type": "css", "value": "input[data-qa='login-email']" },
+  "DLP-Password-Field": { "type": "css", "value": "input[data-qa='login-password']" },
+  "DLP-Sign-In-Button": { "type": "css", "value": "button[data-qa='login-button']" },
+  "DLP-Logged-In-Text": { "type": "xpath", "value": "//a[contains(text(),'Logged in as')]" }
+}

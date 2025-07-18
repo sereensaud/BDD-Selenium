@@ -5,6 +5,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import org.apache.log4j.Logger;
 import org.example.base.BaseTest;
+import org.example.driver.DriverManager;
 import org.example.utils.ScreenshotUtil;
 
 public class Hooks extends BaseTest {
@@ -22,7 +23,7 @@ public class Hooks extends BaseTest {
         if (scenario.isFailed()) {
             screenshotUtil.takeScreenshot(getDriver(), scenario.getName().replaceAll(" ", "_"));
         }
-        tearDown(); // Close driver
+        DriverManager.quitDriver();
         logger.info("=== Finished Scenario: " + scenario.getName() + " ===");
     }
 }

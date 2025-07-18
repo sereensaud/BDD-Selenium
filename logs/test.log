@@ -1,0 +1,34 @@
+2025-07-18 12:29:23 INFO  Hooks:17 - === Starting Scenario: Login with valid credentials ===
+2025-07-18 12:29:23 INFO  BaseTest:15 - ========================================= New Test Run Started ====================================
+2025-07-18 12:29:23 INFO  BaseTest:15 - Loading configuration...
+2025-07-18 12:29:23 INFO  BaseTest:22 - Initializing browser: chrome
+2025-07-18 12:29:28 INFO  BaseTest:38 - Navigating to URL: https://www.automationexercise.com/
+2025-07-18 12:29:34 INFO  LoginPage:38 - Navigating to homepage and clicking on Signup/Login link
+2025-07-18 12:29:35 DEBUG LoginPage:44 - Entering email: youremailtest@example.com
+2025-07-18 12:29:35 DEBUG LoginPage:46 - Entering password: password
+2025-07-18 12:29:35 INFO  LoginPage:52 - Clicking login button
+2025-07-18 12:29:39 INFO  LoginPage:59 - Login status: true
+2025-07-18 12:29:39 INFO  BaseTest:44 - Closing the browser...
+2025-07-18 12:29:39 INFO  Hooks:26 - === Finished Scenario: Login with valid credentials ===
+2025-07-18 12:31:00 INFO  Hooks:18 - === Starting Scenario: Login with valid credentials ===
+2025-07-18 12:31:00 INFO  BaseTest:15 - ========================================= New Test Run Started ====================================
+2025-07-18 12:31:00 INFO  BaseTest:16 - Loading configuration...
+2025-07-18 12:31:00 INFO  BaseTest:23 - Initializing browser: chrome
+2025-07-18 12:31:09 INFO  LoginPage:38 - Navigating to homepage and clicking on Signup/Login link
+2025-07-18 12:31:11 DEBUG LoginPage:44 - Entering email: youremailtest@example.com
+2025-07-18 12:31:11 DEBUG LoginPage:46 - Entering password: password
+2025-07-18 12:31:11 INFO  LoginPage:52 - Clicking login button
+2025-07-18 12:31:15 INFO  LoginPage:59 - Login status: true
+2025-07-18 12:31:15 INFO  Hooks:27 - === Finished Scenario: Login with valid credentials ===
+2025-07-18 18:02:51 INFO  Hooks:18 - === Starting Scenario: Login with valid credentials ===
+2025-07-18 18:02:51 INFO  BaseTest:16 - ========================================= New Test Run Started ====================================
+2025-07-18 18:02:51 INFO  BaseTest:16 - Loading configuration...
+2025-07-18 18:02:51 INFO  BaseTest:23 - Initializing browser: chrome
+2025-07-18 18:02:59 INFO  BaseTest:19 - Browser launched successfully.
+2025-07-18 18:03:07 INFO  BaseTest:26 - Navigated to URL: https://www.automationexercise.com/
+2025-07-18 18:03:09 INFO  BaseTest:32 - Clicked on element: DLP-Login-Link
+2025-07-18 18:03:09 INFO  BaseTest:38 - Entered value: 'youremailtest@example.com' into field: DLP-Email-Field
+2025-07-18 18:03:09 INFO  BaseTest:38 - Entered value: 'yourpassword' into field: DLP-Password-Field
+2025-07-18 18:03:13 INFO  BaseTest:32 - Clicked on element: DLP-Sign-In-Button
+2025-07-18 18:03:13 INFO  BaseTest:44 - Login success element visibility for key 'DLP-Logged-In-Text': true
+2025-07-18 18:03:13 INFO  Hooks:27 - === Finished Scenario: Login with valid credentials ===

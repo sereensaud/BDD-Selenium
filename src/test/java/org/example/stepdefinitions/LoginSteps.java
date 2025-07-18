@@ -1,36 +1,47 @@
 package org.example.stepdefinitions;
 
 import io.cucumber.java.en.*;
-import org.example.pages.LoginPage;
 import org.example.base.BaseTest;
+import org.example.utils.CommonActions;
+import org.example.utils.ConfigReader;
 
 import static org.junit.Assert.assertTrue;
 
 public class LoginSteps extends BaseTest {
 
-    LoginPage loginPage;
+    private CommonActions actions;
 
-    @Given("I launch the browser and open the login page")
-    public void i_launch_browser_and_open_login_page() {
+    @Given("User launches browser")
+    public void user_launches_browser() {
         logger.info("========================================= New Test Run Started ====================================");
-        initializeBrowser(); // from BaseTest
-        loginPage = new LoginPage(getDriver());
-        loginPage.openLoginPage();
+        initializeBrowser();
+        actions = new CommonActions(getDriver());  // Inject driver once
+        logger.info("Browser launched successfully.");
     }
 
-    @When("I enter email {string} and password {string}")
-    public void enter_email_and_password(String email, String password) {
-        loginPage.enterCredentials(email, password);
+    @When("User opens URL")
+    public void user_opens_url() {
+        String url = ConfigReader.getProperty("baseUrl");
+        getDriver().get(url);
+        logger.info("Navigated to URL: " + url);
     }
 
-    @When("I click on login button")
-    public void i_click_login() {
-        loginPage.clickLogin();
+    @When("User clicks {string}")
+    public void user_clicks(String elementKey) {
+        actions.click(elementKey);
+        logger.info("Clicked on element: " + elementKey);
     }
 
-    @Then("I should be logged in successfully")
-    public void i_should_be_logged_in() {
-        assertTrue("Login failed!", loginPage.isLoggedIn());
-//        tearDown(); // from BaseTest // no need to call now bcz now you have hooks for this for SS
+    @When("User enters {string} in {string} field")
+    public void user_enters_in_field(String value, String elementKey) {
+        actions.clearAndSendKeys(elementKey, value);
+        logger.info("Entered value: '" + value + "' into field: " + elementKey);
+    }
+
+    @Then("User should be logged in successfully as {string}")
+    public void user_should_be_logged_in_successfully(String elementKey) {
+        boolean isVisible = actions.isDisplayed(elementKey);
+        logger.info("Login success element visibility for key '" + elementKey + "': " + isVisible);
+        assertTrue("Login verification element not found or not visible!", isVisible);
     }
 }

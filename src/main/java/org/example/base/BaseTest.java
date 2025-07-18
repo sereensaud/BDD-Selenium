@@ -4,12 +4,12 @@ import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.example.driver.DriverManager;
 import org.example.utils.ConfigReader;
 
 import java.time.Duration;
 
 public class BaseTest {
-    protected static WebDriver driver;
     protected static final Logger logger = Logger.getLogger(BaseTest.class);
 
     public void initializeBrowser() {
@@ -17,10 +17,11 @@ public class BaseTest {
         ConfigReader.loadProperties();
 
         String browser = ConfigReader.getProperty("browser");
-        String url = ConfigReader.getProperty("baseUrl");
+//        String url = ConfigReader.getProperty("baseUrl");
         int waitTime = Integer.parseInt(ConfigReader.getProperty("implicitWait"));
 
         logger.info("Initializing browser: " + browser);
+        WebDriver driver;
 
         switch (browser.toLowerCase()) {
             case "chrome":
@@ -35,19 +36,12 @@ public class BaseTest {
 
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(waitTime));
+//        driver.get(url);
 
-        logger.info("Navigating to URL: " + url);
-        driver.get(url);
-    }
-
-    public void tearDown() {
-        if (driver != null) {
-            logger.info("Closing the browser...");
-            driver.quit();
-        }
+        DriverManager.setDriver(driver);
     }
 
     public WebDriver getDriver() {
-        return driver;
+        return DriverManager.getDriver();
     }
 }
