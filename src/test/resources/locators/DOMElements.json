@@ -1,21 +1,14 @@
 {
-  "Common":
-  {
-    "DLP-Login-Link": { "type": "partialLinkText", "value": "Signup" }
-  },
-  "Login":
-  {
-    "Email-Field": { "type": "css", "value": "input[data-qa='login-email']" },
-    "Password-Field": { "type": "css", "value": "input[data-qa='login-password']" },
-    "Log-In-Button": { "type": "css", "value": "button[data-qa='login-button']" },
-    "Logged-In-Text": { "type": "xpath", "value": "//a[contains(text(),'Logged in as')]" },
-    "Password-Field-Helper-Text": { "type": "xpath", "value": "//input[@data-qa='login-password']//following-sibling::p" }
-  },
-  "Signup":
-  {
-    "Name-Field": { "type": "css", "value": "input[data-qa='signup-name']" },
-    "Email-Field": { "type": "css", "value": "input[data-qa='signup-email']" },
-    "Sign-In-Button": { "type": "css", "value": "button[data-qa='signup-button']" },
-    "Email-Field-Helper-Text": { "type": "xpath", "value": "//input[@data-qa='signup-email']//following-sibling::p" }
-  }
+  "Common-Login-Link": { "type": "partialLinkText", "value": "Signup" },
+
+  "Login-Email-Field": { "type": "css", "value": "input[data-qa='login-email']" },
+  "Login-Password-Field": { "type": "css", "value": "input[data-qa='login-password']" },
+  "Login-Button": { "type": "css", "value": "button[data-qa='login-button']" },
+  "Logged-In-Text": { "type": "xpath", "value": "//a[contains(text(),'Logged in as')]" },
+  "Login-Password-Helper-Text": { "type": "xpath", "value": "//input[@data-qa='login-password']//following-sibling::p" },
+
+  "Signup-Name-Field": { "type": "css", "value": "input[data-qa='signup-name']" },
+  "Signup-Email-Field": { "type": "css", "value": "input[data-qa='signup-email']" },
+  "Signup-Button": { "type": "css", "value": "button[data-qa='signup-button']" },
+  "Signup-Email-Helper-Text": { "type": "xpath", "value": "//input[@data-qa='signup-email']//following-sibling::p" }
 }

@@ -14,22 +14,20 @@ public class CommonActions {
     private final WebDriverWait wait;
     private final Actions actions;
     private final JavascriptExecutor js;
-    private final String pageName;
 
     private static final Logger logger = Logger.getLogger(CommonActions.class);
     private static final int MAX_RETRY = 3;
     private static final Duration TIMEOUT = Duration.ofSeconds(10);
 
-    public CommonActions(WebDriver driver, String pageName) {
+    public CommonActions(WebDriver driver) {
         this.driver = driver;
-        this.pageName = pageName;
         this.wait = new WebDriverWait(driver, TIMEOUT);
         this.actions = new Actions(driver);
         this.js = (JavascriptExecutor) driver;
     }
 
     private By getBy(String key) {
-        return LocatorHelper.getLocator(pageName, key);
+        return LocatorHelper.getLocator(key);
     }
 
     private WebElement waitForElement(String key) {
@@ -149,7 +147,6 @@ public class CommonActions {
 
     // ========================== SHADOW DOM + IFRAME SUPPORT ==============================
 
-    // Switch to iframe using locator
     public void switchToIFrame(By iframeLocator) {
         try {
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframeLocator));
@@ -160,13 +157,11 @@ public class CommonActions {
         }
     }
 
-    // Switch back to default content
     public void switchToDefaultContent() {
         driver.switchTo().defaultContent();
         logger.info("Switched to default content");
     }
 
-    // Get shadow root of a shadow host
     public SearchContext getShadowRoot(By shadowHostLocator) {
         try {
             WebElement shadowHost = wait.until(ExpectedConditions.visibilityOfElementLocated(shadowHostLocator));
@@ -177,7 +172,6 @@ public class CommonActions {
         }
     }
 
-    // Get element inside shadow DOM
     public WebElement getShadowElement(By shadowHostLocator, By shadowElementLocator) {
         try {
             SearchContext shadowRoot = getShadowRoot(shadowHostLocator);
@@ -188,14 +182,12 @@ public class CommonActions {
         }
     }
 
-    // Click shadow DOM element
     public void clickShadowElement(By shadowHostLocator, By shadowElementLocator) {
         WebElement shadowElement = getShadowElement(shadowHostLocator, shadowElementLocator);
         shadowElement.click();
         logger.info("Clicked on shadow DOM element inside host: " + shadowHostLocator);
     }
 
-    // Send keys to shadow DOM element
     public void sendKeysToShadowElement(By shadowHostLocator, By shadowElementLocator, String text) {
         WebElement shadowElement = getShadowElement(shadowHostLocator, shadowElementLocator);
         shadowElement.sendKeys(text);

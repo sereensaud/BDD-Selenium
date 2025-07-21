@@ -15,14 +15,8 @@ public class CommonSteps extends BaseTest {
     @Given("User launches browser")
     public void user_launches_browser() {
         initializeBrowser();
+        actions = new CommonActions(getDriver());
         logger.info("Browser launched successfully.");
-    }
-
-    @And("User is on the {string} page")
-    public void user_is_on_the_page(String pageName) {
-        // Instantiate CommonActions with driver and page name
-        actions = new CommonActions(getDriver(), pageName);
-        logger.info("User is now working with the page: " + pageName);
     }
 
     @When("User opens URL")
@@ -38,20 +32,20 @@ public class CommonSteps extends BaseTest {
         logger.info("Clicked on element: " + elementKey);
     }
 
-    @And("User verifies text {string} in {string} field")
-    public void user_verifies_text_in_field(String expectedText, String elementKey) {
-        String actualText = actions.getTextOrValue(elementKey);
-        Assert.assertEquals("Text mismatch in field: " + elementKey, expectedText.trim(), actualText.trim());
-        logger.info("Verified text: '" + expectedText + "' in field: " + elementKey);
-    }
-
     @And("User enters {string} in {string} field")
     public void user_enters_in_field(String value, String elementKey) {
         actions.clearAndSendKeys(elementKey, value);
         logger.info("Entered value: '" + value + "' into field: " + elementKey);
     }
 
-    @Then("User should be logged in successfully as {string}")
+    @Then("User verifies text {string} in {string} field")
+    public void user_verifies_text_in_field(String expectedText, String elementKey) {
+        String actualText = actions.getTextOrValue(elementKey);
+        Assert.assertEquals("Text mismatch in field: " + elementKey, expectedText.trim(), actualText.trim());
+        logger.info("Verified text: '" + expectedText + "' in field: " + elementKey);
+    }
+
+    @And("User should be logged in successfully as {string}")
     public void user_should_be_logged_in_successfully(String elementKey) {
         boolean isVisible = actions.isDisplayed(elementKey);
         logger.info("Login success element visibility for key '" + elementKey + "': " + isVisible);
