@@ -15,31 +15,48 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+/**
+ * Hooks class is used to define actions that should run before and after each scenario.
+ * This helps with setup and teardown tasks like logging, capturing screenshots, and closing the browser.
+ */
 public class Hooks extends BaseTest {
 
     private static final Logger logger = Logger.getLogger(Hooks.class);
     private final ScreenshotUtil screenshotUtil = new ScreenshotUtil();
-    private static final String LOG_FILE_PATH = "logs/execution.log"; // change this if your log path differs
+    private static final String LOG_FILE_PATH = "logs/execution.log"; // path to the log file
 
+    /**
+     * This method runs before each scenario begins.
+     * It logs the start of the scenario in both Log4j logs and Cucumber reports.
+     */
     @Before
     public void beforeScenario(Scenario scenario) {
-        logger.info("=== Starting Scenario: " + scenario.getName() + " ===");
+        logger.info("========== Starting Scenario: " + scenario.getName() + " ================");
         scenario.log("Starting Scenario: " + scenario.getName());
+
     }
 
+    /**
+     * This method runs after each scenario finishes.
+     * It handles:
+     *   - Taking a screenshot if the scenario fails
+     *   - Attaching logs and screenshots to the report
+     *   - Logging pass/fail status
+     *   - Quitting the browser via DriverManager
+     */
     @After
     public void afterScenario(Scenario scenario) {
         WebDriver driver = getDriver();
 
         if (scenario.isFailed()) {
-            // 1. Take screenshot and attach to report
+            // Take screenshot for failed scenario and attach to the report
             byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
             scenario.attach(screenshot, "image/png", "Failure Screenshot");
 
-            // 2. Save screenshot locally (optional)
+            // Save screenshot locally in case you want to check manually
             screenshotUtil.takeScreenshot(driver, scenario.getName().replaceAll(" ", "_"));
 
-            // 3. Attach log file to report
+            // Attach execution logs if log file is found
             File logFile = new File(LOG_FILE_PATH);
             if (logFile.exists()) {
                 try {
@@ -58,6 +75,7 @@ public class Hooks extends BaseTest {
             scenario.log("Scenario passed.");
         }
 
+        // Quit and clean up the browser
         DriverManager.quitDriver();
         logger.info("=== Finished Scenario: " + scenario.getName() + " ===");
         scenario.log("Finished Scenario: " + scenario.getName());

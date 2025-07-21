@@ -10,35 +10,38 @@ import java.time.Duration;
 
 public class CommonActions {
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Actions actions;
-    private JavascriptExecutor js;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+    private final Actions actions;
+    private final JavascriptExecutor js;
+    private final String pageName;
 
     private static final Logger logger = Logger.getLogger(CommonActions.class);
     private static final int MAX_RETRY = 3;
     private static final Duration TIMEOUT = Duration.ofSeconds(10);
 
-    public CommonActions(WebDriver driver) {
+    public CommonActions(WebDriver driver, String pageName) {
         this.driver = driver;
+        this.pageName = pageName;
         this.wait = new WebDriverWait(driver, TIMEOUT);
         this.actions = new Actions(driver);
         this.js = (JavascriptExecutor) driver;
     }
 
+    private By getBy(String key) {
+        return LocatorHelper.getLocator(pageName, key);
+    }
+
     private WebElement waitForElement(String key) {
-        By locator = LocatorHelper.getLocator(key);
-        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        return wait.until(ExpectedConditions.presenceOfElementLocated(getBy(key)));
     }
 
     private WebElement waitForClickable(String key) {
-        By locator = LocatorHelper.getLocator(key);
-        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+        return wait.until(ExpectedConditions.elementToBeClickable(getBy(key)));
     }
 
     private WebElement waitForVisible(String key) {
-        By locator = LocatorHelper.getLocator(key);
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(getBy(key)));
     }
 
     public WebElement getElement(String key) {
@@ -65,6 +68,23 @@ public class CommonActions {
             }
         }
         throw new RuntimeException("Failed to click element after retries: " + key);
+    }
+
+    public String getTextOrValue(String key) {
+        try {
+            WebElement element = waitForVisible(key);
+            String text = element.getText().trim();
+            if (!text.isEmpty()) {
+                logger.info("Got visible text from: " + key + " | Text: " + text);
+                return text;
+            }
+            String value = element.getAttribute("value");
+            logger.info("Got value attribute from: " + key + " | Value: " + value);
+            return value != null ? value.trim() : "";
+        } catch (Exception e) {
+            logger.error("Failed to get text or value from: " + key, e);
+            throw e;
+        }
     }
 
     public void sendKeys(String key, String value) {
@@ -102,74 +122,6 @@ public class CommonActions {
         } catch (Exception e) {
             logger.warn("Element not visible: " + key);
             return false;
-        }
-    }
-
-    public void acceptAlert() {
-        try {
-            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-            alert.accept();
-            logger.info("Alert accepted.");
-        } catch (Exception e) {
-            logger.error("Failed to accept alert", e);
-            throw e;
-        }
-    }
-
-    public void dismissAlert() {
-        try {
-            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-            alert.dismiss();
-            logger.info("Alert dismissed.");
-        } catch (Exception e) {
-            logger.error("Failed to dismiss alert", e);
-            throw e;
-        }
-    }
-
-    public String getAlertText() {
-        try {
-            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-            String text = alert.getText();
-            logger.info("Alert text: " + text);
-            return text;
-        } catch (Exception e) {
-            logger.error("Failed to get alert text", e);
-            throw e;
-        }
-    }
-
-    public void dragAndDrop(String sourceKey, String targetKey) {
-        try {
-            WebElement source = waitForVisible(sourceKey);
-            WebElement target = waitForVisible(targetKey);
-            actions.dragAndDrop(source, target).perform();
-            logger.info("Dragged from " + sourceKey + " to " + targetKey);
-        } catch (Exception e) {
-            logger.error("Drag and drop failed", e);
-            throw e;
-        }
-    }
-
-    public void hoverOverElement(String key) {
-        try {
-            WebElement element = waitForVisible(key);
-            actions.moveToElement(element).perform();
-            logger.info("Hovered over: " + key);
-        } catch (Exception e) {
-            logger.error("Failed to hover: " + key, e);
-            throw e;
-        }
-    }
-
-    public void scrollToElement(String key) {
-        try {
-            WebElement element = waitForVisible(key);
-            js.executeScript("arguments[0].scrollIntoView(true);", element);
-            logger.info("Scrolled to: " + key);
-        } catch (Exception e) {
-            logger.error("Scroll failed: " + key, e);
-            throw e;
         }
     }
 

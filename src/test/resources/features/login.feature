@@ -4,7 +4,20 @@ Feature: User Login
     Given User launches browser
     When User opens URL
     And User clicks "DLP-Login-Link"
-    And User enters "youremailtest@example.com" in "DLP-Email-Field" field
-    And User enters "yourpassword" in "DLP-Password-Field" field
-    And User clicks "DLP-Sign-In-Button"
-    Then User should be logged in successfully as "DLP-Logged-In-Text"
+    And User enters "youremailtest@example.com" in "Email-Field" field
+    And User enters "yourpassword" in "Password-Field" field
+    And User clicks "Log-In-Button"
+    Then User should be logged in successfully as "Logged-In-Text"
+
+  Scenario Outline: Login with invalid password credentials
+    Given User launches browser
+    When User opens URL
+    And User clicks "DLP-Login-Link"
+    And User enters "youremailtest@example.com" in "Email-Field" field
+    And User enters "wrongpassword" in "Password-Field" field
+    And User clicks "Log-In-Button"
+    Then User verifies text "<validateErrMsg>" in "Password-Field-Helper-Text" field
+
+    Examples:
+      | validateErrMsg |
+      | Your email or password is incorrect! |

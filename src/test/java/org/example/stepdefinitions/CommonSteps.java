@@ -4,19 +4,25 @@ import io.cucumber.java.en.*;
 import org.example.base.BaseTest;
 import org.example.utils.CommonActions;
 import org.example.utils.ConfigReader;
+import org.junit.Assert;
 
 import static org.junit.Assert.assertTrue;
 
-public class LoginSteps extends BaseTest {
+public class CommonSteps extends BaseTest {
 
     private CommonActions actions;
 
     @Given("User launches browser")
     public void user_launches_browser() {
-        logger.info("========================================= New Test Run Started ====================================");
         initializeBrowser();
-        actions = new CommonActions(getDriver());  // Inject driver once
         logger.info("Browser launched successfully.");
+    }
+
+    @And("User is on the {string} page")
+    public void user_is_on_the_page(String pageName) {
+        // Instantiate CommonActions with driver and page name
+        actions = new CommonActions(getDriver(), pageName);
+        logger.info("User is now working with the page: " + pageName);
     }
 
     @When("User opens URL")
@@ -26,13 +32,20 @@ public class LoginSteps extends BaseTest {
         logger.info("Navigated to URL: " + url);
     }
 
-    @When("User clicks {string}")
+    @And("User clicks {string}")
     public void user_clicks(String elementKey) {
         actions.click(elementKey);
         logger.info("Clicked on element: " + elementKey);
     }
 
-    @When("User enters {string} in {string} field")
+    @And("User verifies text {string} in {string} field")
+    public void user_verifies_text_in_field(String expectedText, String elementKey) {
+        String actualText = actions.getTextOrValue(elementKey);
+        Assert.assertEquals("Text mismatch in field: " + elementKey, expectedText.trim(), actualText.trim());
+        logger.info("Verified text: '" + expectedText + "' in field: " + elementKey);
+    }
+
+    @And("User enters {string} in {string} field")
     public void user_enters_in_field(String value, String elementKey) {
         actions.clearAndSendKeys(elementKey, value);
         logger.info("Entered value: '" + value + "' into field: " + elementKey);
