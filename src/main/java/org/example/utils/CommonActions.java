@@ -13,9 +13,9 @@ public class CommonActions {
     private WebDriver driver;
     private WebDriverWait wait;
     private Actions actions;
-    private static final Logger logger = Logger.getLogger(CommonActions.class);
+    private JavascriptExecutor js;
 
-    // Retry configuration
+    private static final Logger logger = Logger.getLogger(CommonActions.class);
     private static final int MAX_RETRY = 3;
     private static final Duration TIMEOUT = Duration.ofSeconds(10);
 
@@ -23,6 +23,7 @@ public class CommonActions {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, TIMEOUT);
         this.actions = new Actions(driver);
+        this.js = (JavascriptExecutor) driver;
     }
 
     private WebElement waitForElement(String key) {
@@ -164,7 +165,7 @@ public class CommonActions {
     public void scrollToElement(String key) {
         try {
             WebElement element = waitForVisible(key);
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+            js.executeScript("arguments[0].scrollIntoView(true);", element);
             logger.info("Scrolled to: " + key);
         } catch (Exception e) {
             logger.error("Scroll failed: " + key, e);
@@ -192,5 +193,60 @@ public class CommonActions {
             logger.error("Failed to get text: " + key, e);
             throw e;
         }
+    }
+
+    // ========================== SHADOW DOM + IFRAME SUPPORT ==============================
+
+    // Switch to iframe using locator
+    public void switchToIFrame(By iframeLocator) {
+        try {
+            wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframeLocator));
+            logger.info("Switched to iframe: " + iframeLocator);
+        } catch (Exception e) {
+            logger.error("Failed to switch to iframe: " + iframeLocator, e);
+            throw e;
+        }
+    }
+
+    // Switch back to default content
+    public void switchToDefaultContent() {
+        driver.switchTo().defaultContent();
+        logger.info("Switched to default content");
+    }
+
+    // Get shadow root of a shadow host
+    public SearchContext getShadowRoot(By shadowHostLocator) {
+        try {
+            WebElement shadowHost = wait.until(ExpectedConditions.visibilityOfElementLocated(shadowHostLocator));
+            return (SearchContext) js.executeScript("return arguments[0].shadowRoot", shadowHost);
+        } catch (Exception e) {
+            logger.error("Failed to access shadow root: " + shadowHostLocator, e);
+            throw e;
+        }
+    }
+
+    // Get element inside shadow DOM
+    public WebElement getShadowElement(By shadowHostLocator, By shadowElementLocator) {
+        try {
+            SearchContext shadowRoot = getShadowRoot(shadowHostLocator);
+            return shadowRoot.findElement(shadowElementLocator);
+        } catch (Exception e) {
+            logger.error("Failed to find element inside shadow DOM: " + shadowElementLocator, e);
+            throw e;
+        }
+    }
+
+    // Click shadow DOM element
+    public void clickShadowElement(By shadowHostLocator, By shadowElementLocator) {
+        WebElement shadowElement = getShadowElement(shadowHostLocator, shadowElementLocator);
+        shadowElement.click();
+        logger.info("Clicked on shadow DOM element inside host: " + shadowHostLocator);
+    }
+
+    // Send keys to shadow DOM element
+    public void sendKeysToShadowElement(By shadowHostLocator, By shadowElementLocator, String text) {
+        WebElement shadowElement = getShadowElement(shadowHostLocator, shadowElementLocator);
+        shadowElement.sendKeys(text);
+        logger.info("Sent keys to shadow DOM element inside host: " + shadowHostLocator);
     }
 }
